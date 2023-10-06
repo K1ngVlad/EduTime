@@ -3,6 +3,7 @@ import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { ParseServise } from '../../services';
 import { CategoryItem } from '../../components/CategoryItem';
+import { Loading } from '../../components';
 
 const GroupScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
@@ -16,9 +17,18 @@ const GroupScreen = ({ navigation }) => {
         setGroups(() => data);
         setError(() => null);
       })
-      .catch((error) => setError(() => console.log(error.message)))
-      .then(setLoading(false));
+      .catch((error) => {
+        console.log(error.message);
+        setError(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
+
+  if (loading) {
+    return <Loading theme={'light'} />;
+  }
 
   return (
     <View style={styles.container}>

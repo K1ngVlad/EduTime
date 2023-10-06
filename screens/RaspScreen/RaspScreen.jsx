@@ -2,15 +2,15 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { items } from './items';
-import { DayItem, RaspItem } from '../../components';
+import { DayItem, Loading, RaspItem } from '../../components';
 import { ParseServise } from '../../services';
 
 const RaspScreen = () => {
   const [rasp, setRasp] = useState({
-    weekDay: 1,
-    week: 1,
-    days: [],
-    date: '',
+    weekDay: -1,
+    week: 0,
+    days: [0, 0, 0, 0, 0, 0],
+    date: '00.00.0000',
     scheduleItems: [],
     timeItems: [],
   });
@@ -28,7 +28,9 @@ const RaspScreen = () => {
         console.log(error.message);
         setError(() => error.message);
       })
-      .then(setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const onLeftPressHandler = () => {
@@ -55,7 +57,7 @@ const RaspScreen = () => {
     setLoading(true);
     ParseServise.getRasp(rasp.week + 1, rasp.weekDay)
       .then(({ date, timeItems, scheduleItems }) => {
-        setError(true);
+        setError(null);
         setRasp((rasp) => ({
           ...rasp,
           date,
@@ -66,7 +68,7 @@ const RaspScreen = () => {
       })
       .catch((error) => {
         console.log(error.message);
-        setError(false);
+        setError(error.message);
       })
       .then(setLoading(() => false));
   };
@@ -111,12 +113,20 @@ const RaspScreen = () => {
         </View>
       </View>
       <View style={styles.box}>
-        <FlatList
-          data={rasp.timeItems}
-          renderItem={({ item, index }) => (
-            <RaspItem time={item} item={rasp.scheduleItems[index]} />
-          )}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            data={rasp.timeItems}
+            renderItem={({ item, index }) => (
+              <RaspItem
+                first={!index}
+                time={item}
+                item={rasp.scheduleItems[index]}
+              />
+            )}
+          />
+        )}
       </View>
     </View>
   );

@@ -31,7 +31,10 @@ const DayItem = ({
         console.log(error.message);
         setError(false);
       })
-      .then(setLoading(() => false));
+      .finally(() => {
+        setLoading(false);
+      });
+    // .then(setLoading(false));
   };
 
   return (

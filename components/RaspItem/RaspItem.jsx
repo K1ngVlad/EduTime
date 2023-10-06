@@ -1,11 +1,11 @@
 import { View, Text } from 'react-native';
 import { styles } from './styles';
 
-const RaspItem = ({ time, item }) => {
+const RaspItem = ({ time, item, first }) => {
   console.log(time);
   if (!item) {
     return (
-      <View style={styles.empty}>
+      <View style={first ? styles.emptyFirst : styles.empty}>
         <Text>Пусто</Text>
       </View>
     );
@@ -13,14 +13,8 @@ const RaspItem = ({ time, item }) => {
 
   const { discipline, place, teacher, groups, comment } = item;
 
-  // return (
-  //   <View style={styles.empty}>
-  //     <Text>Не пусто</Text>
-  //   </View>
-  // );
-
   return (
-    <View style={styles.contaner}>
+    <View style={first ? styles.containerFirst : styles.container}>
       <View style={styles.content}>
         <View style={styles.discipline}>
           <Text style={styles.disciplineText}>{discipline}</Text>

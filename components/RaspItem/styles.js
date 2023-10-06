@@ -2,12 +2,21 @@ import { StyleSheet } from 'react-native';
 import { white, samBlue } from '../../constants';
 
 const styles = StyleSheet.create({
-  contaner: {
+  container: {
     flex: 1,
     minHeight: 150,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
+    padding: 20,
+    backgroundColor: white,
+  },
+  containerFirst: {
+    flex: 1,
+    minHeight: 150,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 0,
     padding: 20,
     backgroundColor: white,
   },
@@ -18,6 +27,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
+    padding: 20,
+    backgroundColor: white,
+  },
+  emptyFirst: {
+    flex: 1,
+    height: 150,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 0,
     padding: 20,
     backgroundColor: white,
   },

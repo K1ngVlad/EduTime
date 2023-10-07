@@ -7,7 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class ParseServise {
   static async getFaculties() {
     try {
-      CacheService.cache();
+      const { cached, cachedData } = await CacheService.checkCache(
+        'faculties_data'
+      );
+
+      if (cached) {
+        return cachedData;
+      }
+
       const { data } = await api.get(raspPath);
       const root = parse(data);
       const faculties = root.querySelector('.faculties');
@@ -17,6 +24,9 @@ class ParseServise {
         title: item.querySelector('a').text,
         href: item.querySelector('a').attrs.href,
       }));
+
+      CacheService.cache('faculties_data', arr);
+
       return arr;
     } catch (error) {
       throw new Error(error.message);
@@ -25,6 +35,15 @@ class ParseServise {
   static async getCourses() {
     try {
       const faculty = await AsyncStorage.getItem('faculty');
+
+      const { cached, cachedData } = await CacheService.checkCache(
+        `courses_data_${faculty}`
+      );
+
+      if (cached) {
+        return cachedData;
+      }
+
       const { data } = await api.get(`${facultyPath}/${faculty}?course=1`);
       const root = parse(data);
       const courses = root.querySelector('.nav-course');
@@ -34,6 +53,9 @@ class ParseServise {
           href: item.querySelector('a').attrs.href,
         })
       );
+
+      CacheService.cache(`courses_data_${faculty}`, arr);
+
       return arr;
     } catch (error) {
       throw new Error(error.message);
@@ -44,6 +66,15 @@ class ParseServise {
     try {
       const faculty = await AsyncStorage.getItem('faculty');
       const course = await AsyncStorage.getItem('course');
+
+      const { cached, cachedData } = await CacheService.checkCache(
+        `groups_data_${faculty}_${course}`
+      );
+
+      if (cached) {
+        return cachedData;
+      }
+
       const { data } = await api.get(
         `${facultyPath}/${faculty}?course=${course}`
       );
@@ -54,6 +85,9 @@ class ParseServise {
         title: item.querySelector('span').text,
         href: item.attrs.href,
       }));
+
+      CacheService.cache(`groups_data_${faculty}_${course}`, arr);
+
       return arr;
     } catch (error) {
       throw new Error(error.message);
@@ -63,6 +97,15 @@ class ParseServise {
   static async initRasp() {
     try {
       const group = await AsyncStorage.getItem('group');
+
+      const { cached, cachedData } = await CacheService.checkCache(
+        `rasp_data_${group}`
+      );
+
+      if (cached) {
+        return cachedData;
+      }
+
       const { data } = await api.get(`${raspPath}?groupId=${group}`);
       const root = parse(data);
 
@@ -124,6 +167,15 @@ class ParseServise {
           return { discipline, place, teacher, groups, comment };
         });
 
+      CacheService.cache(`rasp_data_${group}`, {
+        week,
+        weekDay,
+        days,
+        scheduleItems,
+        timeItems,
+        date,
+      });
+
       return { week, weekDay, days, scheduleItems, timeItems, date };
     } catch (error) {
       throw new Error(error.message);
@@ -133,6 +185,16 @@ class ParseServise {
   static async getRasp(week, weekDay) {
     try {
       const group = await AsyncStorage.getItem('group');
+
+      const { cached, cachedData } = await CacheService.checkCache(
+        `rasp_data_${group}_${week}_${weekDay}`
+      );
+
+      if (cached) {
+        console.log(cachedData);
+        return cachedData;
+      }
+
       const { data } = await api.get(
         `${raspPath}?groupId=${group}&selectedWeek=${week}&selectedWeekday=${
           weekDay + 1
@@ -176,6 +238,12 @@ class ParseServise {
 
           return { discipline, place, teacher, groups, comment };
         });
+
+      CacheService.cache(`rasp_data_${group}_${week}_${weekDay}`, {
+        date,
+        timeItems,
+        scheduleItems,
+      });
 
       return { date, timeItems, scheduleItems };
     } catch (error) {

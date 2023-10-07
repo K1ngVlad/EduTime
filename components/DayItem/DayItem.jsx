@@ -18,7 +18,7 @@ const DayItem = ({
     setLoading(true);
     ParseServise.getRasp(rasp.week, weekDay)
       .then(({ date, timeItems, scheduleItems }) => {
-        setError(true);
+        setError(null);
         setRasp((rasp) => ({
           ...rasp,
           date,
@@ -29,7 +29,7 @@ const DayItem = ({
       })
       .catch((error) => {
         console.log(error.message);
-        setError(false);
+        setError(error.message);
       })
       .finally(() => {
         setLoading(false);

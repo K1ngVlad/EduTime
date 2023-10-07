@@ -32,6 +32,8 @@ const CourseScreen = ({ navigation }) => {
       });
   };
 
+  const onRefreshHandler = () => fetchCourses(true);
+
   useEffect(() => {
     fetchCourses(false);
   }, []);
@@ -41,7 +43,14 @@ const CourseScreen = ({ navigation }) => {
   }
 
   if (error) {
-    return <ErrorElem theme="light" navigation={navigation} />;
+    return (
+      <ErrorElem
+        loading={loading}
+        onRefreshHandler={onRefreshHandler}
+        theme="light"
+        navigation={navigation}
+      />
+    );
   }
 
   return (
@@ -49,10 +58,7 @@ const CourseScreen = ({ navigation }) => {
       <FlatList
         data={courses}
         refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={() => fetchCourses(true)}
-          />
+          <RefreshControl refreshing={loading} onRefresh={onRefreshHandler} />
         }
         renderItem={({ item }) => (
           <CategoryItem

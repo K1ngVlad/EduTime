@@ -1,9 +1,22 @@
 import { styles } from './styles';
-import { View, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 
-const ErrorElem = ({ navigation, theme }) => {
+const ErrorElem = ({ navigation, theme, loading, onRefreshHandler }) => {
   return (
-    <View style={theme === 'light' ? styles.container : styles.containerDark}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={onRefreshHandler} />
+      }
+      contentContainerStyle={
+        theme === 'light' ? styles.container : styles.containerDark
+      }
+    >
       <Text style={theme === 'light' ? styles.text : styles.textDark}>
         Что то пошло не так...
       </Text>
@@ -25,7 +38,7 @@ const ErrorElem = ({ navigation, theme }) => {
           </Text>
         </View>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

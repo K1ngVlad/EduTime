@@ -1,6 +1,7 @@
 import {
   FlatList,
   RefreshControl,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -22,13 +23,21 @@ const RaspScreen = ({ navigation }) => {
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [entered, setEntered] = useState(true);
 
   const fetchRasp = (week, weekDay, refresh) => {
     setLoading(() => true);
     ParseServise.getRasp(week, weekDay, refresh)
       .then((data) => {
-        setRasp((rasp) => ({ ...rasp, ...data }));
-        setError(() => null);
+        console.log(`Это дата ${data}`);
+        if (data === 'Рассписание пока не введено!') {
+          console.log('работает?');
+          setEntered(() => false);
+          setError(() => null);
+        } else {
+          setRasp((rasp) => ({ ...rasp, ...data }));
+          setError(() => null);
+        }
       })
       .catch((error) => {
         console.log(error.message);
@@ -39,12 +48,19 @@ const RaspScreen = ({ navigation }) => {
       });
   };
 
+  const onRefreshHandler = () => fetchRasp(rasp.week, rasp.weekDay, true);
+
   const initRasp = () => {
     setLoading(() => true);
     ParseServise.initRasp()
       .then((rasp) => {
-        setRasp(() => rasp);
-        setError(() => null);
+        if (rasp === 'Рассписание пока не введено!') {
+          setEntered(() => false);
+          setError(() => null);
+        } else {
+          setRasp(() => rasp);
+          setError(() => null);
+        }
       })
       .catch((error) => {
         console.log(error.message);
@@ -112,12 +128,28 @@ const RaspScreen = ({ navigation }) => {
         {loading ? (
           <Loading />
         ) : error ? (
-          <ErrorElem navigation={navigation} />
+          <ErrorElem
+            loading={loading}
+            onRefreshHandler={onRefreshHandler}
+            navigation={navigation}
+          />
+        ) : !entered ? (
+          <View>
+            <Text>Рассписание пока не введено!</Text>
+          </View>
         ) : !rasp.timeItems.length ? (
-          <View style={styles.fullEmpety}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={onRefreshHandler}
+              />
+            }
+            contentContainerStyle={styles.fullEmpety}
+          >
             <Text style={styles.fullEmpetyText}>Сегодня пар нет</Text>
             <Text style={styles.fullEmpetyDescript}>Ура!</Text>
-          </View>
+          </ScrollView>
         ) : (
           <FlatList
             refreshControl={

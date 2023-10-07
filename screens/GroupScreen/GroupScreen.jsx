@@ -26,6 +26,8 @@ const GroupScreen = ({ navigation }) => {
       });
   };
 
+  const onRefreshHandler = () => fetchGroups(true);
+
   useEffect(() => {
     fetchGroups(false);
   }, []);
@@ -35,7 +37,14 @@ const GroupScreen = ({ navigation }) => {
   }
 
   if (error) {
-    return <ErrorElem theme="light" navigation={navigation} />;
+    return (
+      <ErrorElem
+        loading={loading}
+        onRefreshHandler={onRefreshHandler}
+        theme="light"
+        navigation={navigation}
+      />
+    );
   }
 
   return (
@@ -43,10 +52,7 @@ const GroupScreen = ({ navigation }) => {
       <FlatList
         data={groups}
         refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={() => fetchGroups(true)}
-          />
+          <RefreshControl refreshing={loading} onRefresh={onRefreshHandler} />
         }
         renderItem={({ item }) => (
           <CategoryItem

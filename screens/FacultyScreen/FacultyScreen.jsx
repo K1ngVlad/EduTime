@@ -28,6 +28,8 @@ const FacultyScreen = ({ navigation }) => {
       });
   };
 
+  const onRefreshHandler = () => fetchFaculties(true);
+
   useEffect(() => {
     setLoading(() => true);
     AsyncStorage.getItem('group').then((group) => {
@@ -43,7 +45,14 @@ const FacultyScreen = ({ navigation }) => {
   }
 
   if (error) {
-    return <ErrorElem theme="light" navigation={navigation} />;
+    return (
+      <ErrorElem
+        loading={loading}
+        onRefreshHandler={onRefreshHandler}
+        theme="light"
+        navigation={navigation}
+      />
+    );
   }
 
   return (
@@ -51,10 +60,7 @@ const FacultyScreen = ({ navigation }) => {
       <FlatList
         data={faculties}
         refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={() => fetchFaculties(true)}
-          />
+          <RefreshControl refreshing={loading} onRefresh={onRefreshHandler} />
         }
         renderItem={({ item }) => (
           <CategoryItem

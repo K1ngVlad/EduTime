@@ -16,11 +16,12 @@ const RaspItem = ({ time, item, scheduleItems, first, index }) => {
     );
   }
 
-  const { discipline, place, teacher, groups, comment, subgroup } = item;
+  const { discipline, place, teachers, groups, comment, subgroup, borderType } =
+    item;
 
   return (
     <View style={first ? styles.containerFirst : styles.container}>
-      <View style={styles.content}>
+      <View style={[styles.content, styles[borderType]]}>
         <View style={styles.discipline}>
           <Text style={styles.disciplineText}>{discipline}</Text>
         </View>
@@ -29,11 +30,18 @@ const RaspItem = ({ time, item, scheduleItems, first, index }) => {
             <Text>{place}</Text>
           </View>
         )}
-        {teacher && (
-          <View style={styles.teacher}>
-            <Text>{teacher}</Text>
-          </View>
-        )}
+        {teachers &&
+          (Array.isArray(teachers) ? (
+            <View style={styles.teacher}>
+              {teachers.map((teacher) => (
+                <Text key={teacher}>{teacher}</Text>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.teacher}>
+              <Text>{teachers}</Text>
+            </View>
+          ))}
         {groups && (
           <View style={styles.groups}>
             {groups.map((group) => (
@@ -56,7 +64,7 @@ const RaspItem = ({ time, item, scheduleItems, first, index }) => {
           </View>
         )}
       </View>
-      <View style={styles.time}>
+      <View style={[styles.time, styles[`${borderType}time`]]}>
         {time.length ? (
           time.map((item, i) => (
             <Text style={styles.timeText} key={i}>

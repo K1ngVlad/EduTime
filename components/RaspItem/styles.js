@@ -1,5 +1,14 @@
 import { StyleSheet } from 'react-native';
-import { white, samBlue, grey } from '../../constants';
+import {
+  white,
+  samBlue,
+  grey,
+  borderType1,
+  borderType2,
+  borderType3,
+  borderType4,
+  borderType5,
+} from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,6 +19,36 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 20,
     backgroundColor: white,
+  },
+  borderType1: {
+    borderRightColor: borderType1,
+  },
+  borderType2: {
+    borderRightColor: borderType2,
+  },
+  borderType3: {
+    borderRightColor: borderType3,
+  },
+  borderType4: {
+    borderRightColor: borderType4,
+  },
+  borderType5: {
+    borderRightColor: borderType5,
+  },
+  borderType1time: {
+    borderLeftColor: borderType1,
+  },
+  borderType2time: {
+    borderLeftColor: borderType2,
+  },
+  borderType3time: {
+    borderLeftColor: borderType3,
+  },
+  borderType4time: {
+    borderLeftColor: borderType4,
+  },
+  borderType5time: {
+    borderLeftColor: borderType5,
   },
   containerFirst: {
     flex: 1,
@@ -56,13 +95,17 @@ const styles = StyleSheet.create({
     color: grey,
   },
   content: {
+    borderRightWidth: 2,
     flex: 5,
+    paddingRight: 5,
   },
   time: {
     flex: 1,
     alignItems: 'flex-end',
+    borderLeftWidth: 2,
   },
   timeText: {
+    color: grey,
     fontSize: 18,
   },
   groups: {

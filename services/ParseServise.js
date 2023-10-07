@@ -127,6 +127,8 @@ class ParseServise {
       const { data } = await api.get(`${raspPath}?groupId=${group}`);
       const root = parse(data);
 
+      const timetable = root.querySelector('.timetable-card');
+
       const weekElem = root.querySelector('.week-nav-current_week');
       const week = parseFloat(weekElem.text);
 
@@ -145,6 +147,19 @@ class ParseServise {
       const day = Number(dayElem.text.trim());
 
       const weekDay = days.findIndex((elem) => elem === day);
+
+      console.log('алло');
+      if (!timetable) {
+        console.log('рассписание не введено');
+        CacheService.cache(`rasp_data_${group}`, 'Расписание пока не введено!');
+
+        CacheService.cache(
+          `rasp_data_${group}_${week}_${weekDay}`,
+          'Расписание пока не введено!'
+        );
+
+        return 'Рассписание пока не введено!';
+      }
 
       const date = root
         .querySelector('.schedule__items')
@@ -165,13 +180,28 @@ class ParseServise {
         .map((scheduleItem) => {
           const dispElem = scheduleItem.querySelector('.schedule__discipline');
           if (!dispElem) return null;
+
+          const lesson = scheduleItem.querySelector('.schedule__lesson');
+          let borderType = 'borderType5';
+
+          if (lesson.classList.contains('lesson-border-type-1')) {
+            borderType = 'borderType1';
+          } else if (lesson.classList.contains('lesson-border-type-2')) {
+            borderType = 'borderType2';
+          } else if (lesson.classList.contains('lesson-border-type-3')) {
+            borderType = 'borderType3';
+          } else if (lesson.classList.contains('lesson-border-type-4')) {
+            borderType = 'borderType4';
+          }
+
           const discipline = dispElem.text.trim();
           const place = scheduleItem
             .querySelector('.schedule__place')
             .text.trim();
-          const teacher = scheduleItem
+          const teachers = scheduleItem
             .querySelector('.schedule__teacher')
-            .text.trim();
+            .querySelectorAll('.caption-text')
+            .map((teacher) => teacher.text.trim());
           const groups = scheduleItem
             .querySelector('.schedule__groups')
             .querySelectorAll('.schedule__group')
@@ -184,7 +214,15 @@ class ParseServise {
             .querySelector('.schedule__comment')
             .text.trim();
 
-          return { discipline, place, teacher, groups, comment, subgroup };
+          return {
+            discipline,
+            place,
+            teachers,
+            groups,
+            comment,
+            subgroup,
+            borderType,
+          };
         });
 
       trimRasp(scheduleItems, timeItems);
@@ -231,11 +269,31 @@ class ParseServise {
       );
       const root = parse(data);
 
+      const timetable = root.querySelector('.timetable-card');
+
+      if (!timetable) {
+        console.log('рассписание не введено');
+        CacheService.cache(
+          `rasp_data_${group}_${week}_${weekDay}`,
+          'Расписание пока не введено!'
+        );
+
+        return 'Рассписание пока не введено!';
+      }
+
       const date = root
         .querySelector('.schedule__items')
         .querySelectorAll('.schedule__head')
         [weekDay + 1].querySelector('.schedule__head-date')
         .text.trim();
+
+      const daysElem = root.querySelector('.weekday-nav');
+
+      const days = daysElem
+        .querySelectorAll('.weekday-nav__item')
+        .map((day) =>
+          Number(day.querySelector('.weekday-nav__item-date').text.trim())
+        );
 
       const timeItems = root
         .querySelectorAll('.schedule__time')
@@ -250,13 +308,27 @@ class ParseServise {
         .map((scheduleItem) => {
           const dispElem = scheduleItem.querySelector('.schedule__discipline');
           if (!dispElem) return null;
+
+          const lesson = scheduleItem.querySelector('.schedule__lesson');
+          let borderType = 'borderType5';
+          if (lesson.classList.contains('lesson-border-type-1')) {
+            borderType = 'borderType1';
+          } else if (lesson.classList.contains('lesson-border-type-2')) {
+            borderType = 'borderType2';
+          } else if (lesson.classList.contains('lesson-border-type-3')) {
+            borderType = 'borderType3';
+          } else if (lesson.classList.contains('lesson-border-type-4')) {
+            borderType = 'borderType4';
+          }
+
           const discipline = dispElem.text.trim();
           const place = scheduleItem
             .querySelector('.schedule__place')
             .text.trim();
-          const teacher = scheduleItem
+          const teachers = scheduleItem
             .querySelector('.schedule__teacher')
-            .text.trim();
+            .querySelectorAll('.caption-text')
+            .map((teacher) => teacher.text.trim());
           const groups = scheduleItem
             .querySelector('.schedule__groups')
             .querySelectorAll('.schedule__group')
@@ -269,7 +341,15 @@ class ParseServise {
             .querySelector('.schedule__comment')
             .text.trim();
 
-          return { discipline, place, teacher, groups, comment, subgroup };
+          return {
+            discipline,
+            place,
+            teachers,
+            groups,
+            comment,
+            subgroup,
+            borderType,
+          };
         });
 
       trimRasp(scheduleItems, timeItems);
@@ -278,9 +358,10 @@ class ParseServise {
         date,
         timeItems,
         scheduleItems,
+        days,
       });
 
-      return { date, timeItems, scheduleItems };
+      return { date, timeItems, scheduleItems, days };
     } catch (error) {
       throw new Error(error.message);
     }

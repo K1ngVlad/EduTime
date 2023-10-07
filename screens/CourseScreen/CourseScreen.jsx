@@ -1,4 +1,10 @@
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { ParseServise } from '../../services';
@@ -10,9 +16,9 @@ const CourseScreen = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchCourses = (refresh) => {
     setLoading(() => true);
-    ParseServise.getCourses()
+    ParseServise.getCourses(refresh)
       .then((data) => {
         setCourses(() => data);
         setError(() => null);
@@ -24,6 +30,10 @@ const CourseScreen = ({ navigation }) => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchCourses(false);
   }, []);
 
   if (loading) {
@@ -38,6 +48,12 @@ const CourseScreen = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={courses}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => fetchCourses(true)}
+          />
+        }
         renderItem={({ item }) => (
           <CategoryItem
             type="course"

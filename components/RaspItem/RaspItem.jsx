@@ -1,17 +1,22 @@
 import { View, Text } from 'react-native';
 import { styles } from './styles';
 
-const RaspItem = ({ time, item, first }) => {
-  console.log(time);
+const RaspItem = ({ time, item, scheduleItems, first, index }) => {
   if (!item) {
+    if (scheduleItems[index - 1] === null) return <></>;
     return (
-      <View style={first ? styles.emptyFirst : styles.empty}>
-        <Text>Пусто</Text>
+      <View
+        style={
+          scheduleItems[index + 1] === null ? styles.longEmpty : styles.empty
+        }
+      >
+        <Text style={styles.emptyText}>Окно!</Text>
+        <Text style={styles.emptyDescript}>Можно отдохнуть</Text>
       </View>
     );
   }
 
-  const { discipline, place, teacher, groups, comment } = item;
+  const { discipline, place, teacher, groups, comment, subgroup } = item;
 
   return (
     <View style={first ? styles.containerFirst : styles.container}>
@@ -36,6 +41,12 @@ const RaspItem = ({ time, item, first }) => {
                 {group}
               </Text>
             ))}
+          </View>
+        )}
+
+        {!groups && subgroup && (
+          <View style={styles.groups}>
+            <Text style={styles.group}>{subgroup}</Text>
           </View>
         )}
 

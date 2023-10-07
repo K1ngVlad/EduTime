@@ -25,7 +25,7 @@ class CacheService {
       }
 
       const parsedData = JSON.parse(cachedData);
-      if (time - Number(cachedTime) < 10000 * 60 && time > Number(cachedTime)) {
+      if (time - Number(cachedTime) < 15000 * 60 && time > Number(cachedTime)) {
         return {
           cached: true,
           cachedData: parsedData,

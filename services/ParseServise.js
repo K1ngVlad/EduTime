@@ -4,15 +4,29 @@ import { api } from '../api';
 import { CacheService } from './CahceServise';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class ParseServise {
-  static async getFaculties() {
-    try {
-      const { cached, cachedData } = await CacheService.checkCache(
-        'faculties_data'
-      );
+const trimRasp = (schedules, times) => {
+  while (schedules[0] === null) {
+    schedules.shift();
+    times.shift();
+  }
 
-      if (cached) {
-        return cachedData;
+  while (schedules[schedules.length - 1] === null) {
+    schedules.pop();
+    times.shift();
+  }
+};
+
+class ParseServise {
+  static async getFaculties(refresh) {
+    try {
+      if (!refresh) {
+        const { cached, cachedData } = await CacheService.checkCache(
+          'faculties_data'
+        );
+
+        if (cached) {
+          return cachedData;
+        }
       }
 
       const { data } = await api.get(raspPath);
@@ -32,16 +46,18 @@ class ParseServise {
       throw new Error(error.message);
     }
   }
-  static async getCourses() {
+  static async getCourses(refresh) {
     try {
       const faculty = await AsyncStorage.getItem('faculty');
 
-      const { cached, cachedData } = await CacheService.checkCache(
-        `courses_data_${faculty}`
-      );
+      if (!refresh) {
+        const { cached, cachedData } = await CacheService.checkCache(
+          `courses_data_${faculty}`
+        );
 
-      if (cached) {
-        return cachedData;
+        if (cached) {
+          return cachedData;
+        }
       }
 
       const { data } = await api.get(`${facultyPath}/${faculty}?course=1`);
@@ -62,17 +78,19 @@ class ParseServise {
     }
   }
 
-  static async getGroups() {
+  static async getGroups(refresh) {
     try {
       const faculty = await AsyncStorage.getItem('faculty');
       const course = await AsyncStorage.getItem('course');
 
-      const { cached, cachedData } = await CacheService.checkCache(
-        `groups_data_${faculty}_${course}`
-      );
+      if (!refresh) {
+        const { cached, cachedData } = await CacheService.checkCache(
+          `groups_data_${faculty}_${course}`
+        );
 
-      if (cached) {
-        return cachedData;
+        if (cached) {
+          return cachedData;
+        }
       }
 
       const { data } = await api.get(
@@ -111,8 +129,6 @@ class ParseServise {
 
       const weekElem = root.querySelector('.week-nav-current_week');
       const week = parseFloat(weekElem.text);
-
-      // const date = root.querySelector('.week-nav-current_date').text;
 
       const daysElem = root.querySelector('.weekday-nav');
 
@@ -160,12 +176,18 @@ class ParseServise {
             .querySelector('.schedule__groups')
             .querySelectorAll('.schedule__group')
             .map((group) => group.text.trim());
+          const subgroupElem = scheduleItem
+            .querySelector('.schedule__groups')
+            .querySelector('.caption-text');
+          const subgroup = subgroupElem ? subgroupElem.text.trim() : '';
           const comment = scheduleItem
             .querySelector('.schedule__comment')
             .text.trim();
 
-          return { discipline, place, teacher, groups, comment };
+          return { discipline, place, teacher, groups, comment, subgroup };
         });
+
+      trimRasp(scheduleItems, timeItems);
 
       CacheService.cache(`rasp_data_${group}`, {
         week,
@@ -176,23 +198,30 @@ class ParseServise {
         date,
       });
 
+      CacheService.cache(`rasp_data_${group}_${week}_${weekDay}`, {
+        date,
+        timeItems,
+        scheduleItems,
+      });
+
       return { week, weekDay, days, scheduleItems, timeItems, date };
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  static async getRasp(week, weekDay) {
+  static async getRasp(week, weekDay, refresh) {
     try {
       const group = await AsyncStorage.getItem('group');
 
-      const { cached, cachedData } = await CacheService.checkCache(
-        `rasp_data_${group}_${week}_${weekDay}`
-      );
+      if (!refresh) {
+        const { cached, cachedData } = await CacheService.checkCache(
+          `rasp_data_${group}_${week}_${weekDay}`
+        );
 
-      if (cached) {
-        console.log(cachedData);
-        return cachedData;
+        if (cached) {
+          return cachedData;
+        }
       }
 
       const { data } = await api.get(
@@ -232,12 +261,18 @@ class ParseServise {
             .querySelector('.schedule__groups')
             .querySelectorAll('.schedule__group')
             .map((group) => group.text.trim());
+          const subgroupElem = scheduleItem
+            .querySelector('.schedule__groups')
+            .querySelector('.caption-text');
+          const subgroup = subgroupElem ? subgroupElem.text.trim() : '';
           const comment = scheduleItem
             .querySelector('.schedule__comment')
             .text.trim();
 
-          return { discipline, place, teacher, groups, comment };
+          return { discipline, place, teacher, groups, comment, subgroup };
         });
+
+      trimRasp(scheduleItems, timeItems);
 
       CacheService.cache(`rasp_data_${group}_${week}_${weekDay}`, {
         date,

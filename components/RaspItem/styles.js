@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { white, samBlue } from '../../constants';
+import { white, samBlue, grey } from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,12 +23,10 @@ const styles = StyleSheet.create({
   empty: {
     flex: 1,
     height: 150,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
     padding: 20,
-    backgroundColor: white,
   },
   emptyFirst: {
     flex: 1,
@@ -39,6 +37,23 @@ const styles = StyleSheet.create({
     marginTop: 0,
     padding: 20,
     backgroundColor: white,
+  },
+  longEmpty: {
+    flex: 1,
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 22,
+    color: grey,
+  },
+  emptyDescript: {
+    fontSize: 18,
+    marginTop: 10,
+    color: grey,
   },
   content: {
     flex: 5,

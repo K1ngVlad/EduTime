@@ -1,4 +1,4 @@
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, RefreshControl, Text, View } from 'react-native';
 import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { ParseServise } from '../../services';
@@ -10,9 +10,9 @@ const GroupScreen = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchGroups = (refresh) => {
     setLoading(() => true);
-    ParseServise.getGroups()
+    ParseServise.getGroups(refresh)
       .then((data) => {
         setGroups(() => data);
         setError(() => null);
@@ -24,6 +24,10 @@ const GroupScreen = ({ navigation }) => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchGroups(false);
   }, []);
 
   if (loading) {
@@ -38,6 +42,12 @@ const GroupScreen = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={groups}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => fetchGroups(true)}
+          />
+        }
         renderItem={({ item }) => (
           <CategoryItem
             type="group"

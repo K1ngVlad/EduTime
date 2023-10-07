@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { lightGray, sea, white } from '../../constants';
+import { grey, lightGray, sea, white } from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,14 +27,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   week: {
-    width: 160,
+    width: 150,
     alignItems: 'center',
   },
   weekText: {
     fontSize: 18,
   },
+  weekButton: {
+    padding: 5,
+  },
   weekButtonText: {
-    fontSize: 20,
+    fontSize: 30,
+  },
+  fullEmpety: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullEmpetyText: {
+    fontSize: 28,
+  },
+  fullEmpetyDescript: {
+    fontSize: 22,
+    marginTop: 20,
+    color: grey,
   },
 });
 

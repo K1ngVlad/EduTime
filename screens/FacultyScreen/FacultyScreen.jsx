@@ -1,4 +1,4 @@
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, RefreshControl, Text, View } from 'react-native';
 import { styles } from './styles';
 import { items } from './items';
 import { CategoryItem } from '../../components/CategoryItem';
@@ -12,24 +12,29 @@ const FacultyScreen = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchFaculties = (refresh) => {
+    setLoading(() => true);
+    ParseServise.getFaculties(refresh)
+      .then((data) => {
+        setFaculties(() => data);
+        setError(() => null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setError(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     setLoading(() => true);
     AsyncStorage.getItem('group').then((group) => {
       if (group) {
         navigation.navigate('Rasp');
       }
-      ParseServise.getFaculties()
-        .then((data) => {
-          setFaculties(() => data);
-          setError(() => null);
-        })
-        .catch((error) => {
-          console.log(error.message);
-          setError(error.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      fetchFaculties(false);
     });
   }, []);
 
@@ -45,6 +50,12 @@ const FacultyScreen = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={faculties}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => fetchFaculties(true)}
+          />
+        }
         renderItem={({ item }) => (
           <CategoryItem
             type="faculty"

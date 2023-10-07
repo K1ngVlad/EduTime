@@ -4,7 +4,6 @@ import { styles } from './style';
 
 const CategoryItem = ({ title, href, navigation, type }) => {
   const onPressHandler = async () => {
-    console.log(type);
     switch (type) {
       case 'faculty':
         const endIndex = href.indexOf('?', 14);
@@ -20,7 +19,6 @@ const CategoryItem = ({ title, href, navigation, type }) => {
       case 'group':
         const index = href.indexOf('=') + 1;
         const group = href.slice(index);
-        console.log(group);
         await AsyncStorage.setItem('group', group);
         navigation.navigate('Rasp');
       default:

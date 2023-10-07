@@ -1,4 +1,10 @@
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { items } from './items';
@@ -17,7 +23,23 @@ const RaspScreen = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchRasp = (week, weekDay, refresh) => {
+    setLoading(() => true);
+    ParseServise.getRasp(week, weekDay, refresh)
+      .then((data) => {
+        setRasp((rasp) => ({ ...rasp, ...data }));
+        setError(() => null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setError(() => error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const initRasp = () => {
     setLoading(() => true);
     ParseServise.initRasp()
       .then((rasp) => {
@@ -31,46 +53,20 @@ const RaspScreen = ({ navigation }) => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    initRasp();
   }, []);
 
   const onLeftPressHandler = () => {
-    setLoading(true);
-    ParseServise.getRasp(rasp.week - 1, rasp.weekDay)
-      .then(({ date, timeItems, scheduleItems }) => {
-        setError(null);
-        setRasp((rasp) => ({
-          ...rasp,
-          date,
-          timeItems,
-          scheduleItems,
-          week: rasp.week - 1,
-        }));
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setError(error.message);
-      })
-      .then(setLoading(() => false));
+    setRasp(() => ({ ...rasp, week: rasp.week - 1 }));
+    fetchRasp(rasp.week - 1, rasp.weekDay, false);
   };
 
   const onRightPressHandler = () => {
-    setLoading(true);
-    ParseServise.getRasp(rasp.week + 1, rasp.weekDay)
-      .then(({ date, timeItems, scheduleItems }) => {
-        setError(null);
-        setRasp((rasp) => ({
-          ...rasp,
-          date,
-          timeItems,
-          scheduleItems,
-          week: rasp.week + 1,
-        }));
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setError(error.message);
-      })
-      .then(setLoading(() => false));
+    setRasp(() => ({ ...rasp, week: rasp.week + 1 }));
+    fetchRasp(rasp.week + 1, rasp.weekDay, false);
   };
 
   return (
@@ -93,7 +89,7 @@ const RaspScreen = ({ navigation }) => {
         </View>
         <View style={styles.weeks}>
           <TouchableOpacity onPress={onLeftPressHandler}>
-            <View>
+            <View style={styles.weekButton}>
               <Text style={styles.weekButtonText}>{'<'}</Text>
             </View>
           </TouchableOpacity>
@@ -106,7 +102,7 @@ const RaspScreen = ({ navigation }) => {
             </View>
           </View>
           <TouchableOpacity onPress={onRightPressHandler}>
-            <View>
+            <View style={styles.weekButton}>
               <Text style={styles.weekButtonText}>{'>'}</Text>
             </View>
           </TouchableOpacity>
@@ -117,14 +113,27 @@ const RaspScreen = ({ navigation }) => {
           <Loading />
         ) : error ? (
           <ErrorElem navigation={navigation} />
+        ) : !rasp.timeItems.length ? (
+          <View style={styles.fullEmpety}>
+            <Text style={styles.fullEmpetyText}>Сегодня пар нет</Text>
+            <Text style={styles.fullEmpetyDescript}>Ура!</Text>
+          </View>
         ) : (
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={() => fetchRasp(rasp.week, rasp.weekDay, true)}
+              />
+            }
             data={rasp.timeItems}
             renderItem={({ item, index }) => (
               <RaspItem
                 first={!index}
                 time={item}
                 item={rasp.scheduleItems[index]}
+                scheduleItems={rasp.scheduleItems}
+                index={index}
               />
             )}
           />

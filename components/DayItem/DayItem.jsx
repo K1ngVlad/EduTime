@@ -14,7 +14,7 @@ const DayItem = ({
 }) => {
   const onPressHandler = () => {
     if (active) return;
-    console.log('переключение');
+    setRasp((rasp) => ({ ...rasp, weekDay }));
     setLoading(true);
     ParseServise.getRasp(rasp.week, weekDay)
       .then(({ date, timeItems, scheduleItems }) => {

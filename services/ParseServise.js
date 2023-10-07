@@ -127,45 +127,30 @@ class ParseServise {
       const { data } = await api.get(`${raspPath}?groupId=${group}`);
       const root = parse(data);
 
-      const timetable = root.querySelector('.timetable-card');
-
       const weekElem = root.querySelector('.week-nav-current_week');
-      const week = parseFloat(weekElem.text);
+      const week = parseFloat(weekElem?.text);
 
       const daysElem = root.querySelector('.weekday-nav');
 
       const days = daysElem
         .querySelectorAll('.weekday-nav__item')
         .map((day) =>
-          Number(day.querySelector('.weekday-nav__item-date').text.trim())
+          Number(day.querySelector('.weekday-nav__item-date')?.text.trim())
         );
 
       const dayElem = daysElem
         .querySelector('.weekday-nav__item_active')
         .querySelector('.weekday-nav__item-date');
 
-      const day = Number(dayElem.text.trim());
+      const day = Number(dayElem?.text.trim());
 
       const weekDay = days.findIndex((elem) => elem === day);
-
-      console.log('алло');
-      if (!timetable) {
-        console.log('рассписание не введено');
-        CacheService.cache(`rasp_data_${group}`, 'Расписание пока не введено!');
-
-        CacheService.cache(
-          `rasp_data_${group}_${week}_${weekDay}`,
-          'Расписание пока не введено!'
-        );
-
-        return 'Рассписание пока не введено!';
-      }
 
       const date = root
         .querySelector('.schedule__items')
         .querySelectorAll('.schedule__head')
         [weekDay + 1].querySelector('.schedule__head-date')
-        .text.trim();
+        ?.text.trim();
 
       const timeItems = root
         .querySelectorAll('.schedule__time')
@@ -268,18 +253,6 @@ class ParseServise {
         }`
       );
       const root = parse(data);
-
-      const timetable = root.querySelector('.timetable-card');
-
-      if (!timetable) {
-        console.log('рассписание не введено');
-        CacheService.cache(
-          `rasp_data_${group}_${week}_${weekDay}`,
-          'Расписание пока не введено!'
-        );
-
-        return 'Рассписание пока не введено!';
-      }
 
       const date = root
         .querySelector('.schedule__items')

@@ -29,15 +29,8 @@ const RaspScreen = ({ navigation }) => {
     setLoading(() => true);
     ParseServise.getRasp(week, weekDay, refresh)
       .then((data) => {
-        console.log(`Это дата ${data}`);
-        if (data === 'Рассписание пока не введено!') {
-          console.log('работает?');
-          setEntered(() => false);
-          setError(() => null);
-        } else {
-          setRasp((rasp) => ({ ...rasp, ...data }));
-          setError(() => null);
-        }
+        setRasp((rasp) => ({ ...rasp, ...data }));
+        setError(() => null);
       })
       .catch((error) => {
         console.log(error.message);
@@ -54,13 +47,8 @@ const RaspScreen = ({ navigation }) => {
     setLoading(() => true);
     ParseServise.initRasp()
       .then((rasp) => {
-        if (rasp === 'Рассписание пока не введено!') {
-          setEntered(() => false);
-          setError(() => null);
-        } else {
-          setRasp(() => rasp);
-          setError(() => null);
-        }
+        setRasp(() => rasp);
+        setError(() => null);
       })
       .catch((error) => {
         console.log(error.message);

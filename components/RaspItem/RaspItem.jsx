@@ -42,7 +42,7 @@ const RaspItem = ({ time, item, scheduleItems, first, index }) => {
               <Text>{teachers}</Text>
             </View>
           ))}
-        {groups && (
+        {!groups.length && (
           <View style={styles.groups}>
             {groups.map((group) => (
               <Text key={group} style={styles.group}>
@@ -52,7 +52,7 @@ const RaspItem = ({ time, item, scheduleItems, first, index }) => {
           </View>
         )}
 
-        {!groups && subgroup && (
+        {groups && subgroup && (
           <View style={styles.groups}>
             <Text style={styles.group}>{subgroup}</Text>
           </View>

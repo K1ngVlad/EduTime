@@ -3,7 +3,7 @@ import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { ParseServise } from '../../services';
 import { CategoryItem } from '../../components/CategoryItem';
-import { Loading } from '../../components';
+import { ErrorElem, Loading } from '../../components';
 
 const GroupScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
@@ -28,6 +28,10 @@ const GroupScreen = ({ navigation }) => {
 
   if (loading) {
     return <Loading theme={'light'} />;
+  }
+
+  if (error) {
+    return <ErrorElem theme="light" navigation={navigation} />;
   }
 
   return (

@@ -2,10 +2,10 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { items } from './items';
-import { DayItem, Loading, RaspItem } from '../../components';
+import { DayItem, ErrorElem, Loading, RaspItem } from '../../components';
 import { ParseServise } from '../../services';
 
-const RaspScreen = () => {
+const RaspScreen = ({ navigation }) => {
   const [rasp, setRasp] = useState({
     weekDay: -1,
     week: 0,
@@ -115,6 +115,8 @@ const RaspScreen = () => {
       <View style={styles.box}>
         {loading ? (
           <Loading />
+        ) : error ? (
+          <ErrorElem navigation={navigation} />
         ) : (
           <FlatList
             data={rasp.timeItems}

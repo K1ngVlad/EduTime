@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { grey, lightGray, sea, white } from '../../constants';
+import { grey, lightGray, samBlue, sea, white, wolf } from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,6 +10,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: lightGray,
     padding: 10,
+    shadowColor: wolf,
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
+    shadowColor: wolf,
   },
   box: {
     flex: 5,
@@ -51,6 +57,24 @@ const styles = StyleSheet.create({
     fontSize: 22,
     marginTop: 20,
     color: grey,
+  },
+  notEntered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notEnteredText: {
+    fontSize: 22,
+  },
+  notEnteredBtn: {
+    marginTop: 20,
+    backgroundColor: samBlue,
+    padding: 10,
+    borderRadius: 10,
+  },
+  notEnteredBtnText: {
+    color: white,
+    fontSize: 18,
   },
 });
 

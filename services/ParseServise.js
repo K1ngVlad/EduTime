@@ -129,8 +129,22 @@ class ParseServise {
 
       const weekElem = root.querySelector('.week-nav-current_week');
       const week = parseFloat(weekElem?.text);
-
       const daysElem = root.querySelector('.weekday-nav');
+
+      if (!daysElem) {
+        const obj = {
+          week: 0,
+          weekDay: 0,
+          days: [0, 0, 0, 0, 0, 0],
+          scheduleItems: 'Расписание не введено!',
+          timeItems: [],
+          date: '00.00.00',
+        };
+
+        CacheService.cache(`rasp_data_${group}`, obj);
+
+        return obj;
+      }
 
       const days = daysElem
         .querySelectorAll('.weekday-nav__item')
@@ -138,19 +152,24 @@ class ParseServise {
           Number(day.querySelector('.weekday-nav__item-date')?.text.trim())
         );
 
-      const dayElem = daysElem
-        .querySelector('.weekday-nav__item_active')
-        .querySelector('.weekday-nav__item-date');
+      const dayActive = daysElem.querySelector('.weekday-nav__item_active');
 
-      const day = Number(dayElem?.text.trim());
-
-      const weekDay = days.findIndex((elem) => elem === day);
-
-      const date = root
-        .querySelector('.schedule__items')
-        .querySelectorAll('.schedule__head')
-        [weekDay + 1].querySelector('.schedule__head-date')
-        ?.text.trim();
+      let dayElem = null;
+      let day = 1;
+      let weekDay = 1;
+      let date = '00.00.00';
+      if (dayActive) {
+        dayElem = dayActive.querySelector('.weekday-nav__item-date');
+        day = Number(dayElem?.text.trim());
+        weekDay = days.findIndex((elem) => elem === day);
+        date = root
+          .querySelector('.schedule__items')
+          .querySelectorAll('.schedule__head')
+          [weekDay + 1].querySelector('.schedule__head-date')
+          ?.text.trim();
+      } else {
+        return this.getRasp(week + 1, 0, false);
+      }
 
       const timeItems = root
         .querySelectorAll('.schedule__time')
@@ -332,9 +351,11 @@ class ParseServise {
         timeItems,
         scheduleItems,
         days,
+        week,
+        weekDay,
       });
 
-      return { date, timeItems, scheduleItems, days };
+      return { date, timeItems, scheduleItems, days, week, weekDay };
     } catch (error) {
       throw new Error(error.message);
     }

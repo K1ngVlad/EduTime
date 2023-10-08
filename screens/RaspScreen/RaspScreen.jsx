@@ -41,12 +41,13 @@ const RaspScreen = ({ navigation }) => {
       });
   };
 
-  const onRefreshHandler = () => fetchRasp(rasp.week, rasp.weekDay, true);
-
   const initRasp = () => {
     setLoading(() => true);
     ParseServise.initRasp()
       .then((rasp) => {
+        if (rasp.scheduleItems === 'Расписание не введено!') {
+          setEntered(() => false);
+        }
         setRasp(() => rasp);
         setError(() => null);
       })
@@ -59,16 +60,26 @@ const RaspScreen = ({ navigation }) => {
       });
   };
 
+  const onRefreshHandler = () => {
+    if (entered) {
+      fetchRasp(rasp.week, rasp.weekDay, true);
+    } else {
+      initRasp();
+    }
+  };
+
   useEffect(() => {
     initRasp();
   }, []);
 
   const onLeftPressHandler = () => {
+    if (!entered) return;
     setRasp(() => ({ ...rasp, week: rasp.week - 1 }));
     fetchRasp(rasp.week - 1, rasp.weekDay, false);
   };
 
   const onRightPressHandler = () => {
+    if (!entered) return;
     setRasp(() => ({ ...rasp, week: rasp.week + 1 }));
     fetchRasp(rasp.week + 1, rasp.weekDay, false);
   };
@@ -87,6 +98,7 @@ const RaspScreen = ({ navigation }) => {
               rasp={rasp}
               setLoading={setLoading}
               setError={setError}
+              entered={entered}
               active={i === rasp.weekDay}
             />
           ))}
@@ -122,9 +134,24 @@ const RaspScreen = ({ navigation }) => {
             navigation={navigation}
           />
         ) : !entered ? (
-          <View>
-            <Text>Рассписание пока не введено!</Text>
-          </View>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={onRefreshHandler}
+              />
+            }
+            contentContainerStyle={styles.notEntered}
+          >
+            <Text style={styles.notEnteredText}>
+              Расписание пока не введено!
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Faculty')}>
+              <View style={styles.notEnteredBtn}>
+                <Text style={styles.notEnteredBtnText}>Вернуться обратно</Text>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
         ) : !rasp.timeItems.length ? (
           <ScrollView
             refreshControl={

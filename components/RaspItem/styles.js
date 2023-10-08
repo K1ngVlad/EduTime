@@ -8,6 +8,7 @@ import {
   borderType3,
   borderType4,
   borderType5,
+  wolf,
 } from '../../constants';
 
 const styles = StyleSheet.create({
@@ -19,6 +20,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 20,
     backgroundColor: white,
+    shadowColor: '#171717',
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
+    shadowColor: '#171717',
   },
   borderType1: {
     borderRightColor: borderType1,
@@ -58,6 +65,12 @@ const styles = StyleSheet.create({
     marginTop: 0,
     padding: 20,
     backgroundColor: white,
+    shadowColor: wolf,
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
+    shadowColor: wolf,
   },
   empty: {
     flex: 1,

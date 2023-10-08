@@ -11,9 +11,10 @@ const DayItem = ({
   setLoading,
   setError,
   rasp,
+  entered,
 }) => {
   const onPressHandler = () => {
-    if (active) return;
+    if (active || !entered) return;
     setRasp((rasp) => ({ ...rasp, weekDay }));
     setLoading(true);
     ParseServise.getRasp(rasp.week, weekDay)

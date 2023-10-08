@@ -2,7 +2,7 @@
   "expo": {
     "name": "EduTime",
     "description": "Доступное расписание Сам ГАУ",
-    "slug": "EduTime",
+    "slug": "edutime",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -20,10 +22,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kingvlad.edutime"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b19cae9e-b61d-471f-be78-052b406d5214"
+      }
+    },
+    "owner": "kingvlad"
   }
 }

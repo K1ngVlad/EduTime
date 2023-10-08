@@ -64,6 +64,7 @@ const GroupScreen = ({ navigation }) => {
             navigation={navigation}
             title={item.title}
             href={item.href}
+            setValue={setValue}
           />
         )}
       />

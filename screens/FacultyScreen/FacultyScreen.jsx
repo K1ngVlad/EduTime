@@ -72,6 +72,7 @@ const FacultyScreen = ({ navigation }) => {
             navigation={navigation}
             title={item.title}
             href={item.href}
+            setValue={setValue}
           />
         )}
       />

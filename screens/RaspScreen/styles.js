@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 5,
+    elevation: 10,
     shadowColor: wolf,
   },
   box: {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   weekButton: {
-    padding: 5,
+    paddingHorizontal: 10,
   },
   weekButtonText: {
     fontSize: 30,
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
   },
   notEnteredBtnText: {
     color: white,
-    fontSize: 18,
   },
 });
 

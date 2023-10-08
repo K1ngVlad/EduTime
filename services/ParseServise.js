@@ -168,7 +168,11 @@ class ParseServise {
           [weekDay + 1].querySelector('.schedule__head-date')
           ?.text.trim();
       } else {
-        return this.getRasp(week + 1, 0, false);
+        const obj = await this.getRasp(week + 1, 0, false);
+        const rasp = { ...obj, week: week + 1, weekDay: 0 };
+        CacheService.cache(`rasp_data_${group}`, rasp);
+        CacheService.cache(`rasp_data_${group}_${week}_${weekDay}`, rasp);
+        return rasp;
       }
 
       const timeItems = root

@@ -24,9 +24,11 @@ const styles = StyleSheet.create({
   descriptText: {
     color: white,
     fontSize: 18,
+    textAlign: 'center',
   },
   descriptTextDark: {
     fontSize: 18,
+    textAlign: 'center',
   },
   backText: {
     color: white,

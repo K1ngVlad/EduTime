@@ -15,9 +15,9 @@ import { ParseServise } from '../../services';
 const RaspScreen = ({ navigation }) => {
   const [rasp, setRasp] = useState({
     weekDay: -1,
-    week: 0,
-    days: [0, 0, 0, 0, 0, 0],
-    date: '00.00.0000',
+    week: 1,
+    days: [1, 2, 3, 4, 5, 6],
+    date: '01.09.2023',
     scheduleItems: [],
     timeItems: [],
   });
@@ -26,6 +26,10 @@ const RaspScreen = ({ navigation }) => {
   const [entered, setEntered] = useState(true);
 
   const fetchRasp = (week, weekDay, refresh) => {
+    if (error || !entered) {
+      initRasp();
+      return;
+    }
     setLoading(() => true);
     ParseServise.getRasp(week, weekDay, refresh)
       .then((data) => {
@@ -73,13 +77,13 @@ const RaspScreen = ({ navigation }) => {
   }, []);
 
   const onLeftPressHandler = () => {
-    if (!entered) return;
+    if (!entered || error || loading) return;
     setRasp(() => ({ ...rasp, week: rasp.week - 1 }));
     fetchRasp(rasp.week - 1, rasp.weekDay, false);
   };
 
   const onRightPressHandler = () => {
-    if (!entered) return;
+    if (!entered || error || loading) return;
     setRasp(() => ({ ...rasp, week: rasp.week + 1 }));
     fetchRasp(rasp.week + 1, rasp.weekDay, false);
   };
@@ -99,7 +103,9 @@ const RaspScreen = ({ navigation }) => {
               setLoading={setLoading}
               setError={setError}
               entered={entered}
+              error={error}
               active={i === rasp.weekDay}
+              loading={loading}
             />
           ))}
         </View>

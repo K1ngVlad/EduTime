@@ -7,7 +7,7 @@ import {
   RefreshControl,
 } from 'react-native';
 
-const ErrorElem = ({ navigation, theme, loading, onRefreshHandler }) => {
+const ErrorElem = ({ theme, loading, onRefreshHandler }) => {
   return (
     <ScrollView
       refreshControl={
@@ -26,15 +26,22 @@ const ErrorElem = ({ navigation, theme, loading, onRefreshHandler }) => {
             theme === 'light' ? styles.descriptText : styles.descriptTextDark
           }
         >
-          Произошла непредвиденная ошибка
+          Произошла ошибка
+        </Text>
+        <Text
+          style={
+            theme === 'light' ? styles.descriptText : styles.descriptTextDark
+          }
+        >
+          Проверьте подключение к сети
         </Text>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('Faculty')}>
+      <TouchableOpacity onPress={onRefreshHandler}>
         <View style={theme === 'light' ? styles.back : styles.backDark}>
           <Text
             style={theme === 'light' ? styles.backText : styles.backTextDark}
           >
-            Вернуться в начало
+            Перезагрузить
           </Text>
         </View>
       </TouchableOpacity>

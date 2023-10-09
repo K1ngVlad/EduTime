@@ -133,12 +133,12 @@ class ParseServise {
 
       if (!daysElem) {
         const obj = {
-          week: 0,
-          weekDay: 0,
-          days: [0, 0, 0, 0, 0, 0],
+          week: 1,
+          weekDay: -1,
+          days: [1, 2, 3, 4, 5, 6],
           scheduleItems: 'Расписание не введено!',
           timeItems: [],
-          date: '00.00.00',
+          date: '01.09.2023',
         };
 
         CacheService.cache(`rasp_data_${group}`, obj);

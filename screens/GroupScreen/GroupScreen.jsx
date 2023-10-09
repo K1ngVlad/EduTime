@@ -3,12 +3,13 @@ import { styles } from './styles';
 import { useEffect, useState } from 'react';
 import { ParseServise } from '../../services';
 import { CategoryItem } from '../../components/CategoryItem';
-import { ErrorElem, Loading } from '../../components';
+import { ErrorElem, Input, Loading } from '../../components';
 
 const GroupScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [value, setValue] = useState('');
 
   const fetchGroups = (refresh) => {
     setLoading(() => true);
@@ -49,8 +50,11 @@ const GroupScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Input value={value} onChangeText={setValue} placeholder="Номер группы" />
       <FlatList
-        data={groups}
+        data={groups.filter((group) =>
+          group.title.toLowerCase().includes(value.toLowerCase().trim())
+        )}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={onRefreshHandler} />
         }
@@ -60,6 +64,7 @@ const GroupScreen = ({ navigation }) => {
             navigation={navigation}
             title={item.title}
             href={item.href}
+            setValue={setValue}
           />
         )}
       />

@@ -4,13 +4,14 @@ import { items } from './items';
 import { CategoryItem } from '../../components/CategoryItem';
 import { useEffect, useState } from 'react';
 import { ParseServise } from '../../services';
-import { ErrorElem, Loading } from '../../components';
+import { ErrorElem, Input, Loading } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FacultyScreen = ({ navigation }) => {
   const [faculties, setFaculties] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [value, setValue] = useState('');
 
   const fetchFaculties = (refresh) => {
     setLoading(() => true);
@@ -57,8 +58,11 @@ const FacultyScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Input value={value} onChangeText={setValue} placeholder="Факультет" />
       <FlatList
-        data={faculties}
+        data={faculties.filter((faculty) =>
+          faculty.title.toLowerCase().includes(value.toLowerCase().trim())
+        )}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={onRefreshHandler} />
         }
@@ -68,6 +72,7 @@ const FacultyScreen = ({ navigation }) => {
             navigation={navigation}
             title={item.title}
             href={item.href}
+            setValue={setValue}
           />
         )}
       />

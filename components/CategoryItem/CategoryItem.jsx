@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './style';
 
-const CategoryItem = ({ title, href, navigation, type }) => {
+const CategoryItem = ({ title, href, navigation, type, setValue }) => {
   const onPressHandler = async () => {
     switch (type) {
       case 'faculty':
@@ -24,6 +24,7 @@ const CategoryItem = ({ title, href, navigation, type }) => {
       default:
         break;
     }
+    if (setValue) setValue('');
   };
 
   return (

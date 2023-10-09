@@ -32,6 +32,7 @@ class ParseServise {
       const { data } = await api.get(raspPath);
       const root = parse(data);
       const faculties = root.querySelector('.faculties');
+
       const arr = Array.from(
         faculties.querySelectorAll('.faculties__item')
       ).map((item) => ({
@@ -63,6 +64,12 @@ class ParseServise {
       const { data } = await api.get(`${facultyPath}/${faculty}?course=1`);
       const root = parse(data);
       const courses = root.querySelector('.nav-course');
+
+      if (!courses) {
+        CacheService.cache(`courses_data_${faculty}`, 'Расписание не введено!');
+        return 'Расписание не введено!';
+      }
+
       const arr = Array.from(courses.querySelectorAll('.nav-course__item')).map(
         (item) => ({
           title: item.querySelector('a').text,

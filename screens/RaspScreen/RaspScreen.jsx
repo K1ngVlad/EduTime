@@ -51,6 +51,8 @@ const RaspScreen = ({ navigation }) => {
       .then((rasp) => {
         if (rasp.scheduleItems === 'Расписание не введено!') {
           setEntered(() => false);
+        } else {
+          setEntered(() => true);
         }
         setRasp(() => rasp);
         setError(() => null);

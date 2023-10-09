@@ -15,12 +15,18 @@ const CourseScreen = ({ navigation }) => {
   const [courses, setCourses] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [entered, setEntered] = useState(true);
 
   const fetchCourses = (refresh) => {
     setLoading(() => true);
     ParseServise.getCourses(refresh)
       .then((data) => {
-        setCourses(() => data);
+        if (data === 'Расписание не введено!') {
+          setEntered(false);
+        } else {
+          setEntered(true);
+          setCourses(() => data);
+        }
         setError(() => null);
       })
       .catch((error) => {
@@ -50,6 +56,19 @@ const CourseScreen = ({ navigation }) => {
         theme="light"
         navigation={navigation}
       />
+    );
+  }
+
+  if (!entered) {
+    return (
+      <View style={styles.notEntered}>
+        <Text style={styles.notEnteredText}>Расписание не введено!</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Faculty')}>
+          <View style={styles.backBtn}>
+            <Text style={styles.backBtnText}>Вернуться обратно</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   }
 

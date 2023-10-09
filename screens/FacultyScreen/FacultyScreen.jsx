@@ -1,6 +1,5 @@
 import { FlatList, RefreshControl, Text, View } from 'react-native';
 import { styles } from './styles';
-import { items } from './items';
 import { CategoryItem } from '../../components/CategoryItem';
 import { useEffect, useState } from 'react';
 import { ParseServise } from '../../services';

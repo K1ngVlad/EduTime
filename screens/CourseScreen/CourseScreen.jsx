@@ -1,6 +1,7 @@
 import {
   FlatList,
   RefreshControl,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -61,14 +62,19 @@ const CourseScreen = ({ navigation }) => {
 
   if (!entered) {
     return (
-      <View style={styles.notEntered}>
+      <ScrollView
+        contentContainerStyle={styles.notEntered}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={onRefreshHandler} />
+        }
+      >
         <Text style={styles.notEnteredText}>Расписание не введено!</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Faculty')}>
           <View style={styles.backBtn}>
             <Text style={styles.backBtnText}>Вернуться обратно</Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 

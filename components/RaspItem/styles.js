@@ -14,9 +14,6 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: 150,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 20,
     padding: 20,
     backgroundColor: white,
@@ -26,6 +23,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 5,
     shadowColor: '#171717',
+  },
+  lesson: {
+    flex: 1,
+    minHeight: 150,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   borderType1: {
     borderRightColor: borderType1,
@@ -59,10 +62,6 @@ const styles = StyleSheet.create({
   },
   containerFirst: {
     flex: 1,
-    minHeight: 150,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 0,
     padding: 20,
     backgroundColor: white,
     shadowColor: wolf,

@@ -5,12 +5,15 @@ import { CacheService } from './CahceServise';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const trimRasp = (schedules, times) => {
-  while (schedules[0] === null) {
+  while (schedules[0] && !schedules[0].length) {
     schedules.shift();
     times.shift();
   }
 
-  while (schedules[schedules.length - 1] === null) {
+  while (
+    schedules[schedules.length - 1] &&
+    !schedules[schedules.length - 1].length
+  ) {
     schedules.pop();
     times.shift();
   }
@@ -192,53 +195,64 @@ class ParseServise {
 
       const scheduleItems = root
         .querySelectorAll('.schedule__item_show')
-        .map((scheduleItem) => {
-          const dispElem = scheduleItem.querySelector('.schedule__discipline');
-          if (!dispElem) return null;
+        .map((scheduleItem) =>
+          scheduleItem
+            .querySelectorAll('.schedule__lesson')
+            .map((scheduleLesson) => {
+              const dispElem = scheduleLesson.querySelector(
+                '.schedule__discipline'
+              );
+              if (!dispElem) return null;
 
-          const lesson = scheduleItem.querySelector('.schedule__lesson');
-          let borderType = 'borderType5';
+              let borderType = 'borderType5';
 
-          if (lesson.classList.contains('lesson-border-type-1')) {
-            borderType = 'borderType1';
-          } else if (lesson.classList.contains('lesson-border-type-2')) {
-            borderType = 'borderType2';
-          } else if (lesson.classList.contains('lesson-border-type-3')) {
-            borderType = 'borderType3';
-          } else if (lesson.classList.contains('lesson-border-type-4')) {
-            borderType = 'borderType4';
-          }
+              if (scheduleLesson.classList.contains('lesson-border-type-1')) {
+                borderType = 'borderType1';
+              } else if (
+                scheduleLesson.classList.contains('lesson-border-type-2')
+              ) {
+                borderType = 'borderType2';
+              } else if (
+                scheduleLesson.classList.contains('lesson-border-type-3')
+              ) {
+                borderType = 'borderType3';
+              } else if (
+                scheduleLesson.classList.contains('lesson-border-type-4')
+              ) {
+                borderType = 'borderType4';
+              }
 
-          const discipline = dispElem.text.trim();
-          const place = scheduleItem
-            .querySelector('.schedule__place')
-            .text.trim();
-          const teachers = scheduleItem
-            .querySelector('.schedule__teacher')
-            .querySelectorAll('.caption-text')
-            .map((teacher) => teacher.text.trim());
-          const groups = scheduleItem
-            .querySelector('.schedule__groups')
-            .querySelectorAll('.schedule__group')
-            .map((group) => group.text.trim());
-          const subgroupElem = scheduleItem
-            .querySelector('.schedule__groups')
-            .querySelector('.caption-text');
-          const subgroup = subgroupElem ? subgroupElem.text.trim() : '';
-          const comment = scheduleItem
-            .querySelector('.schedule__comment')
-            .text.trim();
+              const discipline = dispElem.text.trim();
+              const place = scheduleLesson
+                .querySelector('.schedule__place')
+                .text.trim();
+              const teachers = scheduleLesson
+                .querySelector('.schedule__teacher')
+                .querySelectorAll('.caption-text')
+                .map((teacher) => teacher.text.trim());
+              const groups = scheduleLesson
+                .querySelector('.schedule__groups')
+                .querySelectorAll('.schedule__group')
+                .map((group) => group.text.trim());
+              const subgroupElem = scheduleLesson
+                .querySelector('.schedule__groups')
+                .querySelector('.caption-text');
+              const subgroup = subgroupElem ? subgroupElem.text.trim() : '';
+              const comment = scheduleLesson
+                .querySelector('.schedule__comment')
+                .text.trim();
 
-          return {
-            discipline,
-            place,
-            teachers,
-            groups,
-            comment,
-            subgroup,
-            borderType,
-          };
-        });
+              return {
+                discipline,
+                place,
+                teachers,
+                groups,
+                comment,
+                subgroup,
+                borderType,
+              };
+            })
+        );
 
       trimRasp(scheduleItems, timeItems);
 
@@ -305,54 +319,65 @@ class ParseServise {
             .querySelectorAll('.schedule__time-item')
             .map((timeItem) => timeItem.text.trim())
         );
-
       const scheduleItems = root
         .querySelectorAll('.schedule__item_show')
         .map((scheduleItem) => {
-          const dispElem = scheduleItem.querySelector('.schedule__discipline');
-          if (!dispElem) return null;
+          return scheduleItem
+            .querySelectorAll('.schedule__lesson')
+            .map((scheduleLesson) => {
+              const dispElem = scheduleLesson.querySelector(
+                '.schedule__discipline'
+              );
+              if (!dispElem) return null;
 
-          const lesson = scheduleItem.querySelector('.schedule__lesson');
-          let borderType = 'borderType5';
-          if (lesson.classList.contains('lesson-border-type-1')) {
-            borderType = 'borderType1';
-          } else if (lesson.classList.contains('lesson-border-type-2')) {
-            borderType = 'borderType2';
-          } else if (lesson.classList.contains('lesson-border-type-3')) {
-            borderType = 'borderType3';
-          } else if (lesson.classList.contains('lesson-border-type-4')) {
-            borderType = 'borderType4';
-          }
+              let borderType = 'borderType5';
 
-          const discipline = dispElem.text.trim();
-          const place = scheduleItem
-            .querySelector('.schedule__place')
-            .text.trim();
-          const teachers = scheduleItem
-            .querySelector('.schedule__teacher')
-            .querySelectorAll('.caption-text')
-            .map((teacher) => teacher.text.trim());
-          const groups = scheduleItem
-            .querySelector('.schedule__groups')
-            .querySelectorAll('.schedule__group')
-            .map((group) => group.text.trim());
-          const subgroupElem = scheduleItem
-            .querySelector('.schedule__groups')
-            .querySelector('.caption-text');
-          const subgroup = subgroupElem ? subgroupElem.text.trim() : '';
-          const comment = scheduleItem
-            .querySelector('.schedule__comment')
-            .text.trim();
+              if (scheduleLesson.classList.contains('lesson-border-type-1')) {
+                borderType = 'borderType1';
+              } else if (
+                scheduleLesson.classList.contains('lesson-border-type-2')
+              ) {
+                borderType = 'borderType2';
+              } else if (
+                scheduleLesson.classList.contains('lesson-border-type-3')
+              ) {
+                borderType = 'borderType3';
+              } else if (
+                scheduleLesson.classList.contains('lesson-border-type-4')
+              ) {
+                borderType = 'borderType4';
+              }
 
-          return {
-            discipline,
-            place,
-            teachers,
-            groups,
-            comment,
-            subgroup,
-            borderType,
-          };
+              const discipline = dispElem.text.trim();
+              const place = scheduleLesson
+                .querySelector('.schedule__place')
+                .text.trim();
+              const teachers = scheduleLesson
+                .querySelector('.schedule__teacher')
+                .querySelectorAll('.caption-text')
+                .map((teacher) => teacher.text.trim());
+              const groups = scheduleLesson
+                .querySelector('.schedule__groups')
+                .querySelectorAll('.schedule__group')
+                .map((group) => group.text.trim());
+              const subgroupElem = scheduleLesson
+                .querySelector('.schedule__groups')
+                .querySelector('.caption-text');
+              const subgroup = subgroupElem ? subgroupElem.text.trim() : '';
+              const comment = scheduleLesson
+                .querySelector('.schedule__comment')
+                .text.trim();
+
+              return {
+                discipline,
+                place,
+                teachers,
+                groups,
+                comment,
+                subgroup,
+                borderType,
+              };
+            });
         });
 
       trimRasp(scheduleItems, timeItems);

@@ -2,12 +2,15 @@ import { View, Text } from 'react-native';
 import { styles } from './styles';
 
 const RaspItem = ({ time, item, scheduleItems, first, index }) => {
-  if (!item) {
-    if (scheduleItems[index - 1] === null) return <></>;
+  if (!item[0]) {
+    if (scheduleItems[index - 1] && !scheduleItems[index - 1].length)
+      return <></>;
     return (
       <View
         style={
-          scheduleItems[index + 1] === null ? styles.longEmpty : styles.empty
+          scheduleItems[index + 1] && !scheduleItems[index + 1].length
+            ? styles.longEmpty
+            : styles.empty
         }
       >
         <Text style={styles.emptyText}>Окно!</Text>
@@ -16,65 +19,79 @@ const RaspItem = ({ time, item, scheduleItems, first, index }) => {
     );
   }
 
-  const { discipline, place, teachers, groups, comment, subgroup, borderType } =
-    item;
-
   return (
     <View style={first ? styles.containerFirst : styles.container}>
-      <View style={[styles.content, styles[borderType]]}>
-        <View style={styles.discipline}>
-          <Text style={styles.disciplineText}>{discipline}</Text>
-        </View>
-        {place && (
-          <View style={styles.place}>
-            <Text>{place}</Text>
-          </View>
-        )}
-        {teachers &&
-          (Array.isArray(teachers) ? (
-            <View style={styles.teacher}>
-              {teachers.map((teacher) => (
-                <Text key={teacher}>{teacher}</Text>
-              ))}
-            </View>
-          ) : (
-            <View style={styles.teacher}>
-              <Text>{teachers}</Text>
-            </View>
-          ))}
-        {!groups.length && (
-          <View style={styles.groups}>
-            {groups.map((group) => (
-              <Text key={group} style={styles.group}>
-                {group}
-              </Text>
-            ))}
-          </View>
-        )}
+      {item.map(
+        (
+          {
+            discipline,
+            place,
+            teachers,
+            groups,
+            comment,
+            subgroup,
+            borderType,
+          },
+          index
+        ) => (
+          <View key={index} style={styles.lesson}>
+            <View style={[styles.content, styles[borderType]]}>
+              <View style={styles.discipline}>
+                <Text style={styles.disciplineText}>{discipline}</Text>
+              </View>
+              {place && (
+                <View style={styles.place}>
+                  <Text>{place}</Text>
+                </View>
+              )}
+              {teachers &&
+                (Array.isArray(teachers) ? (
+                  <View style={styles.teacher}>
+                    {teachers.map((teacher) => (
+                      <Text key={teacher}>{teacher}</Text>
+                    ))}
+                  </View>
+                ) : (
+                  <View style={styles.teacher}>
+                    <Text>{teachers}</Text>
+                  </View>
+                ))}
+              {!groups.length && (
+                <View style={styles.groups}>
+                  {groups.map((group) => (
+                    <Text key={group} style={styles.group}>
+                      {group}
+                    </Text>
+                  ))}
+                </View>
+              )}
 
-        {groups && subgroup && (
-          <View style={styles.groups}>
-            <Text style={styles.group}>{subgroup}</Text>
-          </View>
-        )}
+              {groups && subgroup && (
+                <View style={styles.groups}>
+                  <Text style={styles.group}>{subgroup}</Text>
+                </View>
+              )}
 
-        {comment && (
-          <View style={styles.comment}>
-            <Text>{comment}</Text>
+              {comment && (
+                <View style={styles.comment}>
+                  <Text>{comment}</Text>
+                </View>
+              )}
+            </View>
+            <View style={[styles.time, styles[`${borderType}time`]]}>
+              {time.length ? (
+                time.map((item, i) => (
+                  <Text style={styles.timeText} key={i}>
+                    {!index && item}
+                  </Text>
+                ))
+              ) : (
+                <Text style={styles.timeText}>{time}</Text>
+              )}
+            </View>
           </View>
-        )}
-      </View>
-      <View style={[styles.time, styles[`${borderType}time`]]}>
-        {time.length ? (
-          time.map((item, i) => (
-            <Text style={styles.timeText} key={i}>
-              {item}
-            </Text>
-          ))
-        ) : (
-          <Text style={styles.timeText}>{time}</Text>
-        )}
-      </View>
+        )
+      )}
     </View>
   );
 };

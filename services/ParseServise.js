@@ -15,7 +15,7 @@ const trimRasp = (schedules, times) => {
     !schedules[schedules.length - 1].length
   ) {
     schedules.pop();
-    times.shift();
+    times.pop();
   }
 };
 

@@ -2,7 +2,7 @@
   "expo": {
     "name": "SSAU",
     "description": "Доступное расписание SSAU",
-    "slug": "ssau",
+    "slug": "edutime",
     "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

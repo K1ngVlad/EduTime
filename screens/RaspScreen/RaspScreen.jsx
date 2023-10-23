@@ -112,11 +112,18 @@ const RaspScreen = ({ navigation }) => {
           ))}
         </View>
         <View style={styles.weeks}>
-          <TouchableOpacity onPress={onLeftPressHandler}>
-            <View style={styles.weekButton}>
+          {rasp.week > 1 ? (
+            <TouchableOpacity onPress={onLeftPressHandler}>
+              <View style={styles.weekButton}>
+                <Text style={styles.weekButtonText}>{'<'}</Text>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <View style={[styles.weekButton, styles.weekButtonNone]}>
               <Text style={styles.weekButtonText}>{'<'}</Text>
             </View>
-          </TouchableOpacity>
+          )}
+
           <View style={styles.week}>
             <View>
               <Text style={styles.weekText}>{`${rasp.week} неделя`}</Text>

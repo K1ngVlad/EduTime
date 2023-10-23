@@ -75,6 +75,9 @@ const styles = StyleSheet.create({
   notEnteredBtnText: {
     color: white,
   },
+  weekButtonNone: {
+    opacity: 0,
+  },
 });
 
 export { styles };

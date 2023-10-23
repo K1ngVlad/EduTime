@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "EduTime",
-    "description": "Доступное расписание Сам ГАУ",
-    "slug": "edutime",
-    "version": "1.0.1",
+    "name": "SSAU",
+    "description": "Доступное расписание SSAU",
+    "slug": "ssau",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#008cca"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -19,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#008cca"
       },
       "package": "com.kingvlad.edutime"
     },

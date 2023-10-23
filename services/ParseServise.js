@@ -93,15 +93,15 @@ class ParseServise {
       const faculty = await AsyncStorage.getItem('faculty');
       const course = await AsyncStorage.getItem('course');
 
-      // if (!refresh) {
-      //   const { cached, cachedData } = await CacheService.checkCache(
-      //     `groups_data_${faculty}_${course}`
-      //   );
+      if (!refresh) {
+        const { cached, cachedData } = await CacheService.checkCache(
+          `groups_data_${faculty}_${course}`
+        );
 
-      //   if (cached) {
-      //     return cachedData;
-      //   }
-      // }
+        if (cached) {
+          return cachedData;
+        }
+      }
 
       const { data } = await api.get(
         `${facultyPath}/${faculty}?course=${course}`
